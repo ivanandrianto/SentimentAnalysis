@@ -1,5 +1,9 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package sentimentanalysis.Twitter;
-
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -10,12 +14,6 @@ import sentimentanalysis.Twitter.Twitter4JConfig;
 import sentimentanalysis.utils.db.SaveToDB;
 import twitter4j.*;
 import twitter4j.conf.ConfigurationBuilder;
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 /**
  *
