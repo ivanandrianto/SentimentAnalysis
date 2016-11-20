@@ -12,6 +12,8 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import opennlp.tools.cmdline.PerformanceMonitor;
 import opennlp.tools.cmdline.postag.POSModelLoader;
 import opennlp.tools.postag.POSModel;
@@ -58,13 +60,18 @@ public class ApacheNLPTagger{
         
 	String line;
 	while ((line = lineStream.read()) != null) {
-            String whitespaceTokenizerLine[] = WhitespaceTokenizer.INSTANCE
-                            .tokenize(line);
-            String[] tags = tagger.tag(whitespaceTokenizerLine);
+            try {
+                PreProcess preprocessor = new PreProcess();
+                
+                String whitespaceTokenizerLine[] = preprocessor.tokenize(line);
+                String[] tags = tagger.tag(whitespaceTokenizerLine);
 
-            POSSample sample = new POSSample(whitespaceTokenizerLine, tags);
-            //System.out.println(sample.toString() + "X");
-            listOfWordAndTag.add(tags);
+                POSSample sample = new POSSample(whitespaceTokenizerLine, tags);
+                //System.out.println(sample.toString() + "X");
+                listOfWordAndTag.add(tags);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(ApacheNLPTagger.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
 	}
         

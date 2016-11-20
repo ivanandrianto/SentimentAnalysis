@@ -50,23 +50,24 @@ public class PreProcess {
         
     }
     
-    private static void tokenize() throws FileNotFoundException, IOException {
+    public static String[] tokenize(String input) throws FileNotFoundException, IOException {
         InputStream is = new FileInputStream("lib/en-token.bin");
 	TokenizerModel model = new TokenizerModel(is);
 	Tokenizer tokenizer = new TokenizerME(model);
-	String tokens[] = tokenizer.tokenize("Hi. How are you? This is Mike.");
+	String tokens[] = tokenizer.tokenize(input);
  
-	for (String a : tokens) {
-            System.out.println(a);
-        }	
+//	for (String a : tokens) {
+//            System.out.println(a);
+//        }	
  
 	is.close();
+        return tokens;
     }
     
-    private String lemmatize(String word, String postag) throws IOException {
+    public String lemmatize(String word, String postag) throws IOException {
         SimpleLemmatizer lemmatizer = null;
         if (lemmatizer == null) {
-            InputStream is = getClass().getResourceAsStream("lib/en-lemmatizer.dict");
+            InputStream is = new FileInputStream("lib/en-lemmatizer.dict");
             lemmatizer = new SimpleLemmatizer(is);
             is.close();
         }
@@ -114,7 +115,7 @@ public class PreProcess {
     
     
     public static void main(String args[]) throws IOException {
-        doNameFinder();
+        //tokenize();
     }
     
     

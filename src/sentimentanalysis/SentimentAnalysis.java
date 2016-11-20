@@ -22,13 +22,13 @@ import sentimentanalysis.utils.db.DBConfig;
  */
 public class SentimentAnalysis {
     private static String test = "Halo world! ahsdf";
-    private static String paragraph = "Hi. How bad you? This is fuck Mike.\n I have a bad day today, so can you give me a worst ride? I will gladly accept it.\n Please, I need it dearly";
+    private static String paragraph = "Hi. How are you? This is fuck Mike.\n I have a bad day today, so can you give me a good ride? I will gladly accept it.\n Please, I need it dearly";
     
     private static String pathToSWN = "data/SentiWordNet_3.0.0.txt";
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws IOException, SQLException {
+    public static void main(String[] args) throws IOException, SQLException, ClassNotFoundException {
 //        DBConfig dbConfig = new DBConfig();
 //        Connection conn = dbConfig.getConnection();
 //        PreparedStatement statement = null;
@@ -51,7 +51,7 @@ public class SentimentAnalysis {
           System.out.println(getTwitterSentiment(paragraph));
     }
     
-    private static float getTwitterSentiment(String twitter) throws IOException{
+    private static float getTwitterSentiment(String twitter) throws IOException, ClassNotFoundException{
         //Variable to content the total sentiment of a paragraph
         float paragraphSentiment = 0;
 	SentiWordNetAnalyzer sentiwordnet = new SentiWordNetAnalyzer(pathToSWN);    
@@ -59,30 +59,28 @@ public class SentimentAnalysis {
         String[] sentences  = SentenceDetect(twitter);
         for (String sentence : sentences){
             ArrayList<String[]> POSResult = POSTag(sentence);
-            String whitespaceTokenizeWord[] = WhitespaceTokenizer.INSTANCE.tokenize(sentence);
+            PreProcess preprocessor = new PreProcess();
+            String TokenizedWord[] = preprocessor.tokenize(sentence);
             //Do a sentiment analysis for a sentence
             float sentenceSentiment = 0;
-            for (int i = 0; i < whitespaceTokenizeWord.length; i++) {
-                String word = POSResult.get(0)[i];
-                String parsedWord = word.replaceAll("[^A-z]", "");
-                char firstChar = POSResult.get(0)[i].charAt(0);
+            for (int i = 0; i < TokenizedWord.length; i++) {
+                String tag = POSResult.get(0)[i];
+                char firstChar = tag.charAt(0);
+                //System.out.println(TokenizedWord[i] + " tag :" + tag);
                 
+                String lemmaWord = preprocessor.lemmatize(TokenizedWord[i], tag);
                 if(firstChar == 'J'){
                     //System.out.println("Adjective");
-                    //System.out.println(whitespaceTokenizeWord[i] +"#a "+sentiwordnet.extract(whitespaceTokenizeWord[i], "a"));
-                    sentenceSentiment = (float) (sentenceSentiment + sentiwordnet.extract(whitespaceTokenizeWord[i], "a"));
+                    sentenceSentiment = (float) (sentenceSentiment + sentiwordnet.extract(lemmaWord, "a"));
                 } else if(firstChar == 'V'){
                     //System.out.println("Verb");
-                    //System.out.println(whitespaceTokenizeWord[i] +"#v "+sentiwordnet.extract(whitespaceTokenizeWord[i], "v"));
-                    sentenceSentiment = (float) (sentenceSentiment + sentiwordnet.extract(whitespaceTokenizeWord[i], "v"));
+                    sentenceSentiment = (float) (sentenceSentiment + sentiwordnet.extract(lemmaWord, "v"));
                 } else if(firstChar == 'R'){
                     //System.out.println("AdVerb");
-                    //System.out.println(whitespaceTokenizeWord[i] +"#r "+sentiwordnet.extract(whitespaceTokenizeWord[i], "r"));
-                    sentenceSentiment = (float) (sentenceSentiment + sentiwordnet.extract(whitespaceTokenizeWord[i], "r"));
+                    sentenceSentiment = (float) (sentenceSentiment + sentiwordnet.extract(lemmaWord, "r"));
                 } else if(firstChar == 'N'){
                     //System.out.println("Noun");
-                    //System.out.println(whitespaceTokenizeWord[i] +"#n "+sentiwordnet.extract(whitespaceTokenizeWord[i], "n"));
-                    sentenceSentiment = (float) (sentenceSentiment + sentiwordnet.extract(whitespaceTokenizeWord[i], "n"));
+                    sentenceSentiment = (float) (sentenceSentiment + sentiwordnet.extract(lemmaWord, "n"));
                 } else {
                     //do nothing
                 }
