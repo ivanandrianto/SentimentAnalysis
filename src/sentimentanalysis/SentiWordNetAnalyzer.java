@@ -24,11 +24,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SentiWordNetDemoCode {
+public class SentiWordNetAnalyzer {
 
 	private Map<String, Double> dictionary;
 
-	public SentiWordNetDemoCode(String pathToSWN) throws IOException {
+	public SentiWordNetAnalyzer(String pathToSWN) throws IOException {
 		// This is our main dictionary representation
 		dictionary = new HashMap<String, Double>();
 
@@ -124,21 +124,12 @@ public class SentiWordNetDemoCode {
 	}
 
 	public double extract(String word, String pos) {
-		return dictionary.get(word + "#" + pos);
+            double response = 0;
+            if (dictionary.get(word + "#" + pos) != null){
+                response = dictionary.get(word + "#" + pos);
+            }
+            
+            return response;
 	}
-	
-	public static void main(String [] args) throws IOException {
-		if(args.length<1) {
-			System.err.println("Usage: java SentiWordNetDemoCode <pathToSentiWordNetFile>");
-			return;
-		}
-		
-		String pathToSWN = args[0];
-		SentiWordNetDemoCode sentiwordnet = new SentiWordNetDemoCode(pathToSWN);
-		
-		System.out.println("good#a "+sentiwordnet.extract("good", "a"));
-		System.out.println("bad#a "+sentiwordnet.extract("bad", "a"));
-		System.out.println("blue#a "+sentiwordnet.extract("blue", "a"));
-		System.out.println("blue#n "+sentiwordnet.extract("blue", "n"));
-	}
+
 }

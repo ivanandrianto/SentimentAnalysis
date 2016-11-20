@@ -43,5 +43,51 @@ public class SaveToDB {
         conn.close();    
 
     }
+    
+    public static void saveAttributes(ArrayList<Attribute> attributes) throws SQLException {
+        
+        DBConfig dbConfig = new DBConfig();
+        Connection conn = dbConfig.getConnection();
+                
+        for (Attribute attr : attributes) {
+            String attribute_name = attr.getAttributeName();
+            int candidate_id = attr.getCandidateId();
+            
+            PreparedStatement insertStatement = null;
+            String insertPostSQL = "INSERT INTO attributes(attribute_name, candidate_id) VALUES(?, ?, ?, ?)";
+
+            insertStatement = conn.prepareStatement(insertPostSQL);
+            insertStatement.setString(1, attribute_name);
+            insertStatement.setInt(2, candidate_id);
+            insertStatement.executeUpdate();
+        }
+
+        conn.close();    
+
+    }
+    
+    public static void saveGraph(ArrayList<GraphElement> graphElements) throws SQLException {
+        
+        DBConfig dbConfig = new DBConfig();
+        Connection conn = dbConfig.getConnection();
+                
+        for (GraphElement graphElmt : graphElements) {
+            float percentage = graphElmt.getPercentage();
+            Date postTime = graphElmt.getTime();
+            int attribute_id = graphElmt.getAttributeId();
+            
+            PreparedStatement insertStatement = null;
+            String insertPostSQL = "INSERT INTO graphs(percentage ,date, attribute_id) VALUES(?, ?, ?)";
+
+            insertStatement = conn.prepareStatement(insertPostSQL);
+            insertStatement.setFloat(1, percentage);
+            insertStatement.setDate(2, postTime);
+            insertStatement.setInt(3, attribute_id);
+            insertStatement.executeUpdate();
+        }
+
+        conn.close();    
+
+    }
 
 }
