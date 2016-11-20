@@ -28,14 +28,13 @@ public class GetTweets {
 
         TwitterFactory tf = new TwitterFactory(cb.build());
         Twitter twitter = tf.getInstance();
-
         String keyword = "Trump";
 
         ArrayList<Post> TweetResultList = new ArrayList<Post>();
         int count = 0;
         try {
-
-            Query query = new Query(keyword);
+ 
+            Query query = new Query(keyword + "+exclude:retweets+lang:en").until("2016-11-19");
             QueryResult result;
 
             do {
@@ -48,17 +47,18 @@ public class GetTweets {
                     String user = tweet.getUser().getScreenName();
                     String content = tweet.getText();
                     Date time = tweet.getCreatedAt();
+                    System.out.println(time.getTime());
                     String tweet_url = "https://twitter.com/" + tweet.getUser().getScreenName() 
                         + "/status/" + tweet.getId();
-
+                    System.out.println(tweet.getLang());
                     Post tr = new Post(user, content, tweet_url,  new java.sql.Date(time.getTime()));
                     TweetResultList.add(tr);
 
-                    System.out.println("[user]@" + tweet.getUser().getScreenName() 
-                        + "[/user][tweet]" + tweet.getText()+"[/tweet][link]"+tweet_url+"[/link]");
+//                    System.out.println("[user]@" + tweet.getUser().getScreenName() 
+//                        + "[/user][tweet]" + tweet.getText()+"[/tweet][link]"+tweet_url+"[/link]");
                 }
 
-            } while (((query = result.nextQuery()) != null) && (count < 100));
+            } while (((query = result.nextQuery()) != null) && (count < 500));
             
             try {
                 SaveToDB.savePosts(TweetResultList);

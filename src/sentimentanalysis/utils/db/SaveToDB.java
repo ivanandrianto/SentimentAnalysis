@@ -30,7 +30,7 @@ public class SaveToDB {
             Date postTime = post.getTime();
             
             PreparedStatement insertStatement = null;
-            String insertPostSQL = "INSERT INTO posts(user, content, link, postTime) VALUES(?, ?, ?, ?)";
+            String insertPostSQL = "INSERT INTO trump(user, content, link, postTime) VALUES(?, ?, ?, ?)";
 
             insertStatement = conn.prepareStatement(insertPostSQL);
             insertStatement.setString(1, user);
