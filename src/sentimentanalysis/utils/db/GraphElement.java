@@ -16,11 +16,12 @@ public class GraphElement {
     private Date time;
     private int attribute_id;
             
-    public GraphElement(float percentage, Date time, int candidate_id){
+    public GraphElement(float percentage, Date time, int attribute_id){
         this.percentage = percentage;
         this.time = time;
         this.attribute_id = attribute_id;
     }
+
 
     public float getPercentage() {
         return percentage;

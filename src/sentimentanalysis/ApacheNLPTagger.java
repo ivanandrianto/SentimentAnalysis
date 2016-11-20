@@ -67,7 +67,10 @@ public class ApacheNLPTagger{
                 String[] tags = tagger.tag(whitespaceTokenizerLine);
 
                 POSSample sample = new POSSample(whitespaceTokenizerLine, tags);
-                //System.out.println(sample.toString() + "X");
+//                for (String a : tags) {
+//                    System.out.println("tags "+a);
+//                }
+//                System.out.println("tag size " + tags.length);
                 listOfWordAndTag.add(tags);
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(ApacheNLPTagger.class.getName()).log(Level.SEVERE, null, ex);

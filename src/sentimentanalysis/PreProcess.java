@@ -55,11 +55,6 @@ public class PreProcess {
 	TokenizerModel model = new TokenizerModel(is);
 	Tokenizer tokenizer = new TokenizerME(model);
 	String tokens[] = tokenizer.tokenize(input);
- 
-//	for (String a : tokens) {
-//            System.out.println(a);
-//        }	
- 
 	is.close();
         return tokens;
     }
