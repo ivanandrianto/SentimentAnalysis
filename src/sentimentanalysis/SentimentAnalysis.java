@@ -33,6 +33,11 @@ public class SentimentAnalysis {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException, SQLException, ClassNotFoundException {
+        indexClinton();
+        
+    }
+    
+    private static void indexTrump() throws SQLException, IOException, ClassNotFoundException{
         DBConfig dbConfig = new DBConfig();
         Connection conn = dbConfig.getConnection();
         Statement statement = conn.createStatement();;
@@ -51,14 +56,37 @@ public class SentimentAnalysis {
             // print the results
             //System.out.println(tweet);
             float percentage = getTwitterSentiment(tweet);
-            //attribute id is 0 for trump and 999 for Hillary
+            //attribute id is 0 for trump and -1 for Hillary
             GraphElement tempGraph = new GraphElement(percentage, time, 0);
-            graphs.add(tempGraph);
-            //++counter;
+            saver.saveGraph(tempGraph);
+            System.out.println(++counter);
         }
-        saver.saveGraph(graphs);
-        
-        
+    }
+    
+    private static void indexClinton() throws SQLException, IOException, ClassNotFoundException{
+        DBConfig dbConfig = new DBConfig();
+        Connection conn = dbConfig.getConnection();
+        Statement statement = conn.createStatement();;
+        String ReadDatabaseQuery = "SELECT * FROM clinton";
+
+        ResultSet rs = statement.executeQuery(ReadDatabaseQuery);
+        // iterate through the java resultset
+        SaveToDB saver = new SaveToDB();
+        ArrayList<GraphElement> graphs = new ArrayList();
+        int counter = 0;
+        while (rs.next())
+        {
+            
+            String tweet = rs.getString("content");
+            Date time = rs.getDate("postTime");
+            // print the results
+            //System.out.println(tweet);
+            float percentage = getTwitterSentiment(tweet);
+            //attribute id is 0 for trump and -1 for Hillary
+            GraphElement tempGraph = new GraphElement(percentage, time, -1);
+            saver.saveGraph(tempGraph);
+            System.out.println(++counter);
+        }
     }
     
     private static float getTwitterSentiment(String twitter) throws IOException, ClassNotFoundException{
