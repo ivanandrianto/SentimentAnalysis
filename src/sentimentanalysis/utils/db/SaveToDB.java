@@ -8,7 +8,6 @@ package sentimentanalysis.utils.db;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -17,11 +16,13 @@ import java.util.ArrayList;
  * @author ivan
  */
 public class SaveToDB {
+    Connection conn;
     
-    public static void savePosts(ArrayList<Post> posts) throws SQLException {
-        
-        DBConfig dbConfig = new DBConfig();
-        Connection conn = dbConfig.getConnection();
+    public SaveToDB(Connection _conn){
+        conn = _conn;
+    }
+    
+    public void savePosts(ArrayList<Post> posts) throws SQLException {
                 
         for (Post post : posts) {
             String user = post.getUser();
@@ -39,36 +40,31 @@ public class SaveToDB {
             insertStatement.setDate(4, postTime);
             insertStatement.executeUpdate();
         }
-
-        conn.close();    
+ 
 
     }
     
-    public static void saveAttributes(Attribute attr) throws SQLException {
+    public void saveAttributes(Attribute attr) throws SQLException {
         
-        DBConfig dbConfig = new DBConfig();
-        Connection conn = dbConfig.getConnection();
                 
         String attribute_name = attr.getAttributeName();
         int candidate_id = attr.getCandidateId();
 
         PreparedStatement insertStatement = null;
-        String insertPostSQL = "INSERT INTO attributes(attribute_name, candidate_id) VALUES(?, ?, ?, ?)";
+        String insertPostSQL = "INSERT INTO attributes(attribute_name, candidate_id,date,sentiment) VALUES(?, ?, ?, ?)";
 
         insertStatement = conn.prepareStatement(insertPostSQL);
         insertStatement.setString(1, attribute_name);
         insertStatement.setInt(2, candidate_id);
+        insertStatement.setDate(3,attr.getDate());
+        insertStatement.setFloat(4,attr.getSentiment());
         insertStatement.executeUpdate();
-       
 
-        conn.close();    
 
     }
     
-    public static void saveGraph(GraphElement graphElmt) throws SQLException {
+    public void saveGraph(GraphElement graphElmt) throws SQLException {
         
-        DBConfig dbConfig = new DBConfig();
-        Connection conn = dbConfig.getConnection();
                 
         float percentage = graphElmt.getPercentage();
         Date postTime = graphElmt.getTime();
@@ -83,8 +79,6 @@ public class SaveToDB {
         insertStatement.setInt(3, attribute_id);
         insertStatement.executeUpdate();
         
-
-        conn.close();    
 
     }
 

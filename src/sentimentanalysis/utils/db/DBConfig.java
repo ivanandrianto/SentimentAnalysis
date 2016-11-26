@@ -26,6 +26,7 @@ public class DBConfig {
 
     public DBConfig() {
         JSONObject configJson = readConfig();
+        System.out.println(configJson);
         ADDRESS = (String) configJson.get("ADDRESS");
         USERNAME = (String) configJson.get("USERNAME");
         PASSWORD = (String) configJson.get("PASSWORD");
